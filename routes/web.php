@@ -16,14 +16,21 @@ Route::get('/','CalendarController@index');
 Route::get('/home', 'CalendarController@index')->name('home');
 Route::resource('memos', 'CalendarController');
 
-// Memoの追加機能
+// Memoの追加・編集・削除機能
+    // 追加
 Route::post('/memo','CalendarController@postMemo');
-
-// Memoに編集・削除機能を追加
     // 編集
 Route::get('/memo/{id}','CalendarController@getMemoId');
     // 削除
 Route::delete('/delete_memo','CalendarController@deleteMemo');
+
+// iconの追加・編集・削除機能
+    // 追加
+Route::post('/icon_save','CalendarController@postIcon');
+    // 編集
+Route::get('/icon/{id}','CalendarController@getIconId');
+    // 削除
+Route::delete('/delete_icon','CalendarController@deleteIcon');
 
 // アバター登録(S3)
 Route::get('/avatar', 'UserController@avatar');

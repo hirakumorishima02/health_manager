@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\MemoRequest;
+use App\Http\Requests\IconRequest;
 
 class CalendarController extends Controller
 {
@@ -47,7 +48,10 @@ class CalendarController extends Controller
             $memo_val->memo_day = $request->memo_day;
             $memo_val->memo = $request->memo;   
             $memo_val->user_id = Auth::user()->id;
-            $memo_val->save();
+            $memo_val->update(['memo_day'=>$request->memo_day,
+                                'memo'=>$request->memo,
+                                'user_id'=>$request->user_id,
+            ]);
         } else {
             $memo_val = new Memo(); 
             $memo_val->memo_day = $request->memo_day;
@@ -86,18 +90,64 @@ class CalendarController extends Controller
         return redirect('/')->with(['list' =>$list, 'data' => $data, 'cal_tag' => $tag]);
         
     }
-
-    // S３の名残
-    public function upload(Request $request)
+    
+    // iconの登録・更新
+    public function postIcon(IconRequest $request)
     {
-        $file = $request->file('file');
-        $path = Storage::disk('s3')->putFileAs('/', $file, 'hoge.jpg', 'public');
-        return redirect('/');
+        // POSTで受信したiconデータの登録
+        if(isset($request->id)) {
+            $icon_val = Icon::where('id', '=', $request->id)->first();
+            $icon_val->icon_day = $request->icon_day;
+            $icon_val->health = implode(",", $request->health);   
+            $icon_val->user_id = Auth::user()->id;
+            $icon_val->save();
+        } else {
+            $icon_val = new Icon(); 
+            $icon_val->icon_day = $request->icon_day;
+            $icon_val->health = implode(",", $request->health);       
+            $icon_val->user_id = Auth::user()->id;
+            $icon_val->save();   
+        }
+        $data = new Icon();
+        $list = Icon::all();
+        
+        $memoList = Memo::all();
+        $iconList = Icon::all();
+        $cal = new Calendar($memoList,$iconList);
+        $tag = $cal->showCalendarTag($request->month,$request->year);
+        
+        return redirect('/')->with(['list' =>$list, 'data' => $data, 'cal_tag' => $tag]);
     }
-    // S3の名残
-    public function disp()
+    
+    // iconsのid取得
+    public function getIconId($id)
     {
-        $path = Storage::disk('s3')->url('hoge.jpg');
-        return view('disp', compact('path'));
+        $data = new Icon();
+        if (isset($id)) {
+            $data = Icon::where('id', '=', $id)->first();
+        }
+        $list = Icon::all();
+        return view('icon', compact('list', 'data', 'cal_tag'));
+    }
+    
+    // Iconの削除
+    public function deleteIcon(Request $request)
+    {
+        // DELETEで受信した休日データの削除
+        if (isset($request->id)) {
+            $icon = Icon::where('id', '=', $request->id)->first(); 
+            $icon->delete();
+        }
+        // メモデータ取得
+        $data = new Icon();
+        $list = Icon::all();
+        
+        $memoList = Memo::all();
+        $iconList = Icon::all();
+        $cal = new Calendar($memoList,$iconList);
+        $tag = $cal->showCalendarTag($request->month,$request->year);
+
+        return redirect('/')->with(['list' =>$list, 'data' => $data, 'cal_tag' => $tag]);
+        
     }
 }

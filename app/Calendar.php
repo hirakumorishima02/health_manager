@@ -63,11 +63,39 @@ EOS;
                     // 先月・来月の日付の場合
                     $this->html .= "<td>&nbsp;</td>";
                 } else {
-                  $this->html .= "<td>" . $day ."&nbsp" . "<br>"; 
+                  $this->html .= "<td>" . $day ."&nbsp"; 
                   $target = date("Y-m-d", mktime(0, 0, 0, $month, $day, $year)); 
-                   foreach($this->memos as $val) {
+                    // アイコンのカレンダー内表示
+                   foreach($this->icons as $val) {
                        if($val->user_id == Auth::user()->id) {
-                            if ($val->memo_day == $target) {
+                            if ($val->icon_day == $target) {
+                            $this->html .= "<a href='/icon/$val->id'>";
+                                if( strpos($val->health, '1') !== false){
+                                    $this->html .= "<i class='far fa-thumbs-up'></i>";
+                                }
+                                if( strpos($val->health, '2') !== false ){
+                                $this->html .= "<i class='far fa-dizzy'></i>";
+                                }
+                                if( strpos($val->health, '3') !== false ){
+                                $this->html .= "<i class='fas fa-procedures'></i>";
+                                }
+                                if( strpos($val->health, '4') !== false ){
+                                $this->html .= "<i class='fas fa-level-down-alt'></i>";
+                                }
+                                if( strpos($val->health, '5') !== false ){
+                                $this->html .= "<i class='fas fa-thermometer-full'></i>";
+                                }
+                    $this->html .= "</a><br>"; 
+                                break;
+                            }
+                       }
+                    }
+                    // メモのカレンダー内表示
+                   foreach($this->memos as $val) {
+                       if($val->user_id == Auth::user()->id) 
+                       {
+                            if ($val->memo_day == $target) 
+                            {
                                 $this->html .= "<a href='/memo/$val->id'>" . e($val->memo) . "</a>"; 
                                 break;
                             }

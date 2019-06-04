@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <!-- Scripts -->
     <!--<script src="{{ secure_asset('js/app.js') }}" defer></script>-->
     <script src="{{ secure_asset('js/main.js') }}" defer></script>
@@ -90,6 +91,10 @@
     <script>
       $( function() {
         $( "#memo_day" ).datepicker({dateFormat: 'yy-mm-dd'});
+      } );
+      
+      $( function() {
+        $( "#icon_day" ).datepicker({dateFormat: 'yy-mm-dd'});
       } );
     </script>
 </body>

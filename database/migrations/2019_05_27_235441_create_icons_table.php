@@ -15,10 +15,9 @@ class CreateIconsTable extends Migration
     {
         Schema::create('icons', function (Blueprint $table) {
             $table->increments('id');
-            $table->datetime('event_day');
-            $table->text('description');
+            $table->date('icon_day');
+            $table->string('health');
             $table->integer('user_id')->unsigned();
-            $table->integer('event_id')->unsigned();
             $table->timestamps();
             
             $table
@@ -27,11 +26,6 @@ class CreateIconsTable extends Migration
             ->on('users')
             ->onDelete('cascade');
             
-            $table
-            ->foreign('event_id')
-            ->references('id')
-            ->on('events')
-            ->onDelete('cascade');
         });
     }
 

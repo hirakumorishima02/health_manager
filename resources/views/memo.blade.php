@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', '体調管理')
+@section('title', '予定管理')
 @section('content')
                 <h3>予定編集</h3>
                 <form method="POST" action="/memo" autocomplete="off"> 
@@ -19,4 +19,14 @@
                     {{csrf_field()}}
                     <button class="btn btn-danger" type="submit">削除</button>
                 </form>
+@if($errors->any())
+<p>入力にミスがあります。</p>
+ <div class="error">
+   <ul>
+     @foreach($errors->all() as $message)
+       <li class="error">{{ $message }}</li>
+     @endforeach
+   </ul>
+ </div>
+@endif
 @endsection
