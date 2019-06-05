@@ -48,10 +48,7 @@ class CalendarController extends Controller
             $memo_val->memo_day = $request->memo_day;
             $memo_val->memo = $request->memo;   
             $memo_val->user_id = Auth::user()->id;
-            $memo_val->update(['memo_day'=>$request->memo_day,
-                                'memo'=>$request->memo,
-                                'user_id'=>$request->user_id,
-            ]);
+            $memo_val->save();
         } else {
             $memo_val = new Memo(); 
             $memo_val->memo_day = $request->memo_day;
