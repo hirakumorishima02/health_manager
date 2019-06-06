@@ -99,11 +99,23 @@ class CalendarController extends Controller
             $icon_val->user_id = Auth::user()->id;
             $icon_val->save();
         } else {
-            $icon_val = new Icon(); 
-            $icon_val->icon_day = $request->icon_day;
-            $icon_val->health = implode(",", $request->health);       
-            $icon_val->user_id = Auth::user()->id;
-            $icon_val->save();   
+            
+            // 新規追加の処理で、一旦日付とユーザIDで検索して同一レコードの時は更新とする
+            $icon_val = Icon::where('user_id', '=', Auth::user()->id)->where('icon_day', '=', $request->icon_day)->first();
+            if(isset($icon_val)) {
+                $icon_val->health = implode(",", $request->health);  
+                $icon_val->save();   
+            } else {
+                $icon_val = new Icon(); 
+                $icon_val->icon_day = $request->icon_day;
+                $icon_val->health = implode(",", $request->health);       
+                $icon_val->user_id = Auth::user()->id;
+                $icon_val->save();   
+            }
+            
+            
+            
+            
         }
         $data = new Icon();
         $list = Icon::all();
